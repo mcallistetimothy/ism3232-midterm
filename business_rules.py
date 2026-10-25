@@ -1,5 +1,5 @@
 SHORT_RENTAL_DAYS = 3
-LONG_RENTAL_DAYS = 7
+LONG_RENTAL_DAYS = 6
 
 NO_DISCOUNT = 0.0
 REG_RENTAL_DISCOUNT = 0.10
@@ -10,20 +10,21 @@ DAMAGE_WAIVER_THRESHOLD = 150.00
 
 DEPOSIT_THRESHOLD = 1000.00
 
-INSPECTIION_DAYS = 5
+INSPECTION_DAYS = 5
 INSPECTION_QUOTE_THRESHOLD = 800.00
 
 def calculate_rental_cost(daily_rate: float, days: int)-> float:
     return daily_rate * days #total cost of rental
 
 def get_rental_discount(days: int, contractor: bool = False) -> float:
-    if days <= SHORT_RENTAL_DAYS:
-        return NO_DISCOUNT
-    elif days <= LONG_RENTAL_DAYS:
+    if days >= LONG_RENTAL_DAYS:
+        return LONG_RENTAL_DISCOUNT
+    elif days >= SHORT_RENTAL_DAYS:
+        return REG_RENTAL_DISCOUNT
+    elif contractor:
         return REG_RENTAL_DISCOUNT
     else:
-        return LONG_RENTAL_DISCOUNT #calculate discount based on rental days
-    
+        return NO_DISCOUNT
 def calculate_quote(daily_rate: float, days: int, contractor: bool = False) -> float:
     rental_cost = calculate_rental_cost(daily_rate, days)
     discount = get_rental_discount(days, contractor)
@@ -39,7 +40,7 @@ def requires_deposit(quote: float) -> bool:
         return False #determine if a deposit is required based on the quote
     
 def needs_inspection(days: int, quote: float) -> bool:
-    if days >= INSPECTIION_DAYS and quote >= INSPECTION_QUOTE_THRESHOLD:
+    if days >= INSPECTION_DAYS and quote >= INSPECTION_QUOTE_THRESHOLD:
         return True
     else:
         return False #determine if an inspection is needed based on rental days and quote
@@ -60,11 +61,11 @@ def largest_rental(rentals: list) -> str:
     return largest_customer #find the customer with the largest rental quote  
 def format_rental_line(customer: str, quote: float, deposit: bool, inspection: bool) -> str:
     if requires_deposit(quote) is True:
-        deposit_str = "yes"
+        deposit_str = "Yes"
     else:
-        deposit_str = "no"
-    if needs_inspection(quote) is True:
-        inspection_str = "yes"
+        deposit_str = "No"
+    if inspection is True:
+        inspection_str = "Yes"
     else:
-        inspection_str = "no"
-    return f"{customer}: Quote: ${quote:.2f}, Deposit Required: {deposit_str}, Inspection Needed: {inspection_str}"
+        inspection_str = "No"
+    return f"{customer}: ${quote:.2f}| Deposit: {deposit_str}| Inspection: {inspection_str}"
