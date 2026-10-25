@@ -19,3 +19,4 @@ rentals = [
     {"customer": "Garza", "daily_rate": 95.00, "days": 5, "contractor": True},
     {"customer": "Hughes", "daily_rate": 200.00, "days": 7, "contractor": False},
 ]
+
