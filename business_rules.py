@@ -33,13 +33,13 @@ def calculate_quote(daily_rate: float, days: int, contractor: bool = False) -> f
     return quote #calculate final quote based on rental cost, discount, and damage waiver
 
 def requires_deposit(quote: float) -> bool:
-    if quote > DEPOSIT_THRESHOLD:
+    if quote >= DEPOSIT_THRESHOLD:
         return True
     else:
         return False #determine if a deposit is required based on the quote
     
 def needs_inspection(days: int, quote: float) -> bool:
-    if days > INSPECTIION_DAYS and quote > INSPECTION_QUOTE_THRESHOLD:
+    if days >= INSPECTIION_DAYS and quote >= INSPECTION_QUOTE_THRESHOLD:
         return True
     else:
         return False #determine if an inspection is needed based on rental days and quote
@@ -63,7 +63,7 @@ def format_rental_line(customer: str, quote: float, deposit: bool, inspection: b
         deposit_str = "yes"
     else:
         deposit_str = "no"
-    if needs_inspection(rentals[0]["days"], quote) is True:
+    if needs_inspection(quote) is True:
         inspection_str = "yes"
     else:
         inspection_str = "no"
